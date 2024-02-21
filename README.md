@@ -1,7 +1,29 @@
 # googlesheets-reader
- Returns a PUBLIC google sheet's content as JSON, compatible with LiveQuery. Relies on the  #* Ben Borgers implementation of opensheet https://github.com/benborgers/opensheet
+ Returns a PUBLIC google sheet's content as JSON, compatible with LiveQuery. Relies on the Ben Borgers implementation of opensheet https://github.com/benborgers/opensheet. Now also has a generalized CSV importer, best for raw githubcontent CSVs but works with any hosted CSV.
 
-# How to use 
+# General Hosted CSV
+
+Use the same steps as below, but with the param `url` and the `readcsv` endpoint
+
+```sql
+with res AS (
+SELECT
+  livequery.live.udf_api(
+    'GET',
+    'https://science.flipsidecrypto.xyz/googlesheets/readcsv',
+    { 'Content-Type': 'application/json' },
+     { 
+      'url': 'https://raw.githubusercontent.com/andrewhong5297/Crypto-Grants-Analysis/main/uploads/evm_grants.csv'
+    }
+  ) as result
+from DUAL
+)
+
+select result:data as json_result_must_pivot from res;
+
+```
+
+# Google Sheets
 
 1. Generate a Sharing link for google docs
  test data example: https://docs.google.com/spreadsheets/d/1isXwTpJlxMClz1Kg0tkSNMwhd8Z944IgprPULx_aqWg/edit?usp=sharing
